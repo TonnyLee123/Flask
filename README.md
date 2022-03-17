@@ -24,12 +24,39 @@ user.username
 ```
 ### render_template()
 ```python
-user = 'tony'
-@app.route('/login')
-def login():
-  return render_template('login.html', User = user)
+from flask import render_template
+mylist = [1, 2, 3]
+@app.route("/")
+def home():
+    return render_template('home.html', my_list = mylist)
+```
+```html
+<!--home.html-->
+<body>
+	<p>列表第一個元素: {{ my_list[0] }}</p>
+	<p>列表第二個元素: {{ my_list[1] }}</p>
+	<p>列表第三個元素: {{ my_list[2] }}</p>
+  
+</body>
 ```
 1. 模板文件名稱
 - 'login.html'
 2. 模板會使用到的varirable
-- User
+- my_list
+## 內建變數
+可供template直接使用。
+- config
+- request
+- session
+- g
+## 全局函數
+可以在所有模板中使用
+- url_for()
+- get_flashed_message()
+
+## flash()
+- 產生 flash_message
+- flash_message儲存在session中，因此要為程式設置密鑰，然後在模板中使用get_flashed_message()獲取訊息。
+```
+
+```
