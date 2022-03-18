@@ -78,10 +78,10 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique = True, nullable = False)
     img_file = db.Column(db.String(20), nullable = False, default = 'default.jpg')
     password = db.Column(db.String(60), nullable = False)
-    # this posts attribute has a relationship to post model
+    
     # backref 類似於加入其他column to the post model
     # define when SQL alchemy loads the data from the database; true: load the data as necessary in one go
-    posts = db.relationship('Post', backref = 'author', lazy = True)
+    posts = db.relationship('Post', backref = 'author', lazy = True) # posts 的值和 Post(class) 有 One to Many Relationship
     # how object is printed
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.img_file}')"
@@ -91,7 +91,7 @@ class Post(db.Model):
     title = db.Column(db.String(100), nullable = False)
     date_posted = db.Column(db.DateTime(120), nullable = False, default = datetime.utcnow)
     content = db.Column(db.Text, nullable = False)
-    # 注意user.id 不是User, 因為會自動創一個table called user, 然後是根據table
+    # 注意user.id 不是User, 因為會自動創一個table called user, 根據前table(user)的primary key 為此table的foreign key
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False )
     def __repr__(self):
         return f"User('{self.title}', '{self.date_posted}')"
@@ -99,3 +99,21 @@ class Post(db.Model):
 # models.py
 - 資料庫
 - Table 模型
+
+```
+Foreign Key
+Use to link two tables together via the primary key. It means the columns of one table points to the primary key attribute of the other table. It further means that if any attribute is set as a primary key attribute will work in another table as a foreign key attribute. 
+
+```
+
+UserMixin
+UserMixin幫我們記錄了四種用戶狀態：
+
+is_authenticated
+登入成功時return True(這時候才能過的了login_required)
+is_active
+帳號啟用並且登入成功的時候return True
+is_anonymous
+匿名用戶return True(登入用戶會return False)
+get_id()
+取得當前用戶id
