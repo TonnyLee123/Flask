@@ -57,6 +57,45 @@ def home():
 ## flash()
 - 產生 flash_message
 - flash_message儲存在session中，因此要為程式設置密鑰，然後在模板中使用get_flashed_message()獲取訊息。
-```
+```python
+------------------__init__.py----------------------
+from flask_sqlalchemy import SQLAlchemy #(class)
+db = SQLAlchemy(web)
+--------------------------------------------------
+# 創作user的database
+from flaskblog import db, login_manager 
+from datetime import datetime
+from flask_login import UserMixin # (class)
 
+@login_manager.user_loader # 新增以下功能到user_loader
+def load_user(user_id) # 透過user_id載入user
+    return User.query.get(int(user_id))
+# db
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String(20), unique = True, nullable = False)
+    email = db.Column(db.String(120), unique = True, nullable = False)
+    img_file = db.Column(db.String(20), nullable = False, default = 'default.jpg')
+    password = db.Column(db.String(60), nullable = False)
+    # this posts attribute has a relationship to post model
+    # backref 類似於加入其他column to the post model
+    # define when SQL alchemy loads the data from the database; true: load the data as necessary in one go
+    posts = db.relationship('Post', backref = 'author', lazy = True)
+    # how object is printed
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}', '{self.img_file}')"
+    
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String(100), nullable = False)
+    date_posted = db.Column(db.DateTime(120), nullable = False, default = datetime.utcnow)
+    content = db.Column(db.Text, nullable = False)
+    # 注意user.id 不是User, 因為會自動創一個table called user, 然後是根據table
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False )
+    def __repr__(self):
+        return f"User('{self.title}', '{self.date_posted}')"
 ```
+# models.py
+- 資料庫
+- Table 模型
