@@ -10,19 +10,16 @@ from flask import Flask
 
 app = Flask(__name__)
 
-# 當 url 是 http://127.0.0.1:5000 時，執行 home function。
-@app.route("/")
+# Decorator, 告訴 Flask, 緊接在Decorator下面的函式要載入在哪個 URL 中。  
+@app.route("/") # 當 url 是 http://127.0.0.1:5000 時，執行 home function。
 def home():
-    return "<p>Hello, World!</p>"
+    return "<p>Hello, World!</p>" # 要顯示在網頁上的內容，HTML格式
     
 if __name__ == '__main__':
     app.run()
 ```
 - Flask 是 class
 - \_\_name\_\_: 用來定位目前載入資料夾的位置，用來判別 template__folder 或 static_folder 資料夾位置。
-- route(): Decorator, 告訴 Flask, 緊接在Decorator下面的函式要載入在哪個URL中。
-
-
 ## 三. 運行 Flask 的兩種方式
 ### 方式一 flask command
 **通過export FLASK_APP environment variable來告訴terminal要使用的application**
