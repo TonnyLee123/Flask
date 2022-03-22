@@ -50,8 +50,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = [DB_TYPE]+[DB_CONNECTOR]://[USERNAME]:[P
 
 To create the initial database, just import the db object from an interactive Python shell and run the SQLAlchemy.create_all() method to create the tables and database:
 
-# 建立初始化的資料庫
-db.create_all()
+
 
 
 from yourapplication import User
@@ -75,4 +74,39 @@ class Foo(db.Model):
     def __init__(self, **kwargs):
         super(Foo, self).__init__(**kwargs)
         # do custom stuff
+```
+user_1 = User(username = 'Tony', email = '123@demo.com')
+user_2 = User(username = 'James', email = '456@demo.com')
+# id 是primary key，會自動產出id，不必給值。
+# 加入db
+```python
+db.session.add(user_1)
+db.session.add(user_2)
+```
+# 建立初始化的資料庫
+db.create_all()
+
+# 提交資料到db
+## why commit? 尚未學習
+```python
+db.session.commit()
+```
+## Accessing data in DB
+### 1. Get all user
+```python
+User.query.all()
+```
+### 2. Get first user
+```python
+# list中的第一個
+User.query.first()
+```
+### 3. Filter result
+```python
+User.query.filter_by(username = 'Tony').all()
+```
+
+### 4. Get id為1的user 
+```python
+User.query.get(1)
 ```
