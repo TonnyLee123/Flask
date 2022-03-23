@@ -110,3 +110,9 @@ User.query.filter_by(username = 'Tony').all()
 ```python
 User.query.get(1)
 ```
+
+
+# ORM 一對多關聯
+### 定義一對多模型
+Step1. 設定 db.relationship(…) 關係  
+Step2. 設定 db.ForeignKey(…) 關係
