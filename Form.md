@@ -130,7 +130,7 @@ app.run(debug=True)
 ```
 
 # Logout
-目前為止，想刪除session內的資料，必須手動關閉瀏覽器。若要在不關閉瀏覽器的狀態下就刪除session的話該如何處理？
+目前為止，若要刪除session內的資料，必須手動關閉瀏覽器。若要在不關閉瀏覽器的狀態下就刪除session的話該如何處理？
 使用「登出」的方式來達成。
 首先建立一個logout的路由，再透過session.pop()刪除資料
 當程式清除session紀錄之後，隨即讓頁面導向login頁。
