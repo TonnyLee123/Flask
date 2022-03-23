@@ -64,7 +64,7 @@ if __name__ =="__main__":
 #### 解決方式：使用sessions
 session
 - 當登入網站時，session可以**紀錄登入的帳號資訊**，讓在之後瀏覽這網站其他頁面時，可繼續使用這個session資訊作為判斷。
-- 登出網站時，session儲存的資訊也會跟著消失
+- 登出或關閉網站時，session儲存的資訊也會跟著消失
 - 不像cookie，session的資訊是儲存在伺服器端，相對較安全。
 
 
@@ -198,18 +198,37 @@ if __name__ =="__main__":
     app.run(debug=True)
 ```
 
-讓session的效果持續一段時間
-目前使用的session，只要關閉瀏覽器，session的記憶就會消失。有時候，我們並不希望session隨著瀏覽器的關閉而結束它的效力。有時候我們會希望session 不因為瀏覽器的關閉而消失並且效力可以持續一段特定的時間，該如何達成這個效果？
-為了達成這個結果，我們首先需要匯入timedelta套件。timedelta套件可以計算時間，在這裡可以讓我們替session設定存續的期間
+# 讓session效果持續一段時間
+目前使用的session，只要關閉瀏覽器，session的記憶就會消失。有時候我們會希望session 
+不因為瀏覽器的關閉而消失並且效力可以持續一段特定的時間，該如何達成這個效果？
+匯入timedelta套件。
+timedelta套件
+- 可以計算時間，在這裡可以讓我們替session設定存續的期間
 ```python
-
+from datetime import timedelta
 ```
+設定session的保存期限，可以以「minutes」或 「days」為單位來設定
 ```python
-
+app.permanent_session_lifetime = timedelta(minutes=5)
 ```
+
+接著，要在login函式的地方加入下面這一行才會有效果：
 ```python
-
+session.permanent = True
 ```
+login總結
 ```python
-
+#login
+@app.route("/login", methods=["POST","GET"])
+def login():
+    if request.method == "POST":
+        session.permanent = True
+        user = request.form["nm"]
+        session["user"] = user
+        return redirect(url_for("user"))
+    else:
+        if "user" in session:
+            return redirect(url_for("user"))
+        return render_template("login.html")
 ```
+你可以先登入您的姓名後關閉瀏覽器。接著，再打開一次瀏覽器瀏覽login頁面，看看是否仍然是已經登入的狀態。如果是，等待五分鐘看看結果如何？
