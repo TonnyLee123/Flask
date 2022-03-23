@@ -142,66 +142,59 @@ get_id()
 
 	
 	
-#範本繼承
-一個網站中，很多頁面的部分內容是一樣的，如頁首、頁尾、以及導覽區、廣告區等等。Jinja2可以將網頁裡內容一樣的部分抽出來放在基本樣板中，並且套用到同一系列的子樣板網頁上。
-# 基本樣板
-存放共用內容的檔案。一般我們會將它命名為base.html，用這個檔案來設定網站的HTML基本架構。你可以將共通的部分放在這裡：
+# Template Inheritance
+- 一個網站中，很多頁面部分內容是一樣的，如頁尾、導覽區、廣告區等等
+- Jinja2 可以將網頁裡內容一樣的部分抽出來放在 "基本樣板" 中，並套用到子樣板網頁上。
+## Base Template
+
+- 一般命名為layout.html
+- 用來設定網站的HTML基本架構。可以存放共用內容：
 例如：<html>、<head>與<body>，以及<head>裡面放頁面標題的<title>、頁面關鍵字與說明的<meta>、CSS樣式檔的<link>與javaScript檔案的<script>。
-# 子樣板
-由於基本範本是HTML頁面共通的部分，在製作上我們不再需要重複這部分的內容，只要在其他頁面裡繼承基本範本的內容就可以。繼承的方式是在子樣本中使用{% extends %}這個關鍵字來呼叫base.html。這表示這個子範本繼承了base.html範本。
-{% extends "base.html" %}
-要注意的是，extends必須是子範本中的第一個標籤。
-我們可以用{% block content %}{% endblock %}放基本範本所沒有的內容。
-{% block content %}{% endblock %}
-使用block區塊是子樣板的關鍵字，content是子範本本體的名稱。同一個頁面中，content的名稱不可以一樣。
+## Child Template
+- 繼承的方式是在子樣本中使用{% extends %}。這表示這個子範本繼承了layout.html範本。
+{% extends "layout.html" %}
+
+用{% block content %}{% endblock %}這頁獨特內容。
+
+content是子範本本體的名稱。同一個頁面中，content的名稱不可以一樣。
 實際使用
-下面的base.html基本樣板使用了bootstrap的CSS框架。中間使用了{% block body %}{% endblock %} 來給子樣板使用。
-<!DOCTYPE html>
-<html lang="zh-tw">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{site_name}}</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-<a class="navbar-brand" href="#">Navbar</a>
-<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-<span class="navbar-toggler-icon"></span>
-</button>
-<div class="collapse navbar-collapse" id="navbarNav">
-<ul class="navbar-nav">
-  <li class="nav-item active">
-  <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-  </li>
-  <li class="nav-item">
-  <a class="nav-link" href="/hello/sean">Hello Sean</a>
-  </li>
-</ul>
-</div>
-</nav>
-<div class="container">
-{% block body %}
-{% endblock %}
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-</body>
+
+block預留一個空位，等之後套用這個樣板的頁面就可以填上
+### 例子
+```python
+# base
+<!doctype html>
+<html>
+  <head>
+    {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>{% block title %}{% endblock %} - My Webpage</title>
+    {% endblock %}
+  </head>
+  <body>
+    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="footer">
+      {% block footer %}
+      &copy; Copyright 2010 by <a href="http://domain.invalid/">you</a>.
+      {% endblock %}
+    </div>
+  </body>
 </html>
-hello.html子樣板。在子樣板裡面，第一行必須是使用extends語法把基本樣板拉進來。之後，可以放block區塊，在這裡我們放了組block，名稱剛好等於基本樣板裡面的名稱（ 一樣是 {% block body %}，這樣兩者就可以對應在一起了）。
-{% extends "base.html" %}
-{% block body %}
-<div class="row">
-<div class="col">
-  <h1>{{name}}, Welcome. This is Home Page</h1>
-  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus ducimus eveniet laudantium voluptatem labore, atque perferendis reiciendis quas ipsam a est assumenda eos distinctio molestiae nam itaque, cum voluptates eligendi.</p>
-</div>
-<div class="col">
-  <h1>This is {{name}}'s first Page</h1>
-  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores nemo maxime culpa, iure, minima ducimus magni non hic similique tempore impedit necessitatibus eum! Sunt adipisci porro aperiam fugit magnam delectus.</p>
-</div>
-</div>
+```
+	
+```python
+# child 
+{% extends "layout.html" %}
+{% block title %}Index{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
 {% endblock %}
-基本上來說，就是在block的地方挖了個洞，預留一個空位，等之後套用這個樣板的頁面就可以填上。這就是 Jinja2 運作的方式，下一回我們會來討論關於傳送資料的方式。
+{% block content %}
+  <h1>Index</h1>
+  <p class="important">
+    Welcome on my awesome homepage.
+{% endblock %}
+```
