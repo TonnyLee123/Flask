@@ -1,9 +1,10 @@
-
+到目前為止，網站頁面中都只有靜態的文字。如果我們單純透過Python來產出一頁頁HTML標籤，並不是一件輕鬆的事
+，Flask預設使用Jinja2樣版引擎。將HTML頁面與後台應用程式聯繫起來，達到簡化HTML輸出的目的。
 # Template Engine
 - 可以在 HTML file 中使用特殊語法來操作變量。
 - 作用: 讀取並執行模板中的特殊語法標記，並根據傳入值傳給變數，輸出成最終的HTML頁面，以上過程稱為 rendering (渲染)
 - Jinja2 
-
+- render_template(“網頁檔案名稱.html”, 參數與區域變數)
 ## Jinja2 
 - 讓我們可以寫python語法，但並不適用於全部。
 ### 語法
@@ -29,6 +30,7 @@ mylist = [1, 2, 3]
 @app.route("/")
 def home():
     return render_template('home.html', my_list = mylist)
+    # 第一個my_list是模板中會用到的
 ```
 ```html
 <!--home.html-->
@@ -117,3 +119,4 @@ is_anonymous
 匿名用戶return True(登入用戶會return False)
 get_id()
 取得當前用戶id
+-把HTML檔案放在templates目錄中，這樣子render_template才有辦法載入HTML檔案。
