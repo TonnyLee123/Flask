@@ -149,20 +149,15 @@ if __name__ =="__main__":
     app.run(debug=True)
 ```
 
-# Logout
+## 3. Logout
 目前為止，若要刪除session內的資料，必須手動關閉瀏覽器。若要在不關閉瀏覽器的狀態下就刪除session的話該如何處理？
 使用「登出」的方式來達成。
-### 3.4 建立一個logout的路由，再透過session.pop()刪除資料
-當程式清除session紀錄之後，隨即讓頁面導向login頁。
+###  建立 logout 路由，再透過 session.pop() 刪除資料
 ```python
 @app.route("/logout")
 def logout():
-    session.pop("USER", None) # 將session裡面記錄的user清除(即登出)
+    session.pop("USER", None)         # 將session裡面記錄的user清除(即登出)
     return redirect(url_for("login")) # 回到登入畫面
-```
-為了配合logout的使用，也需要修改login的部分，讓已經有session紀錄（session[“user”]）的使用者，從login的路由，直接被導向user頁面。
-```python
-
 ```
 ### 總結3 
 ```python
@@ -204,8 +199,8 @@ if __name__ =="__main__":
 ```
 
 ## 讓session儲存的資料持續一段時間
-- 目前使用的session，只要關閉瀏覽器，session內的資料就會被刪除。
-- 不因為瀏覽器的關閉而消失並且效力可以持續一段特定的時間，該如何達成這個效果？
+- session，只要關閉瀏覽器，session內的資料就會被刪除。
+- 避免瀏覽器的關閉而導致資料的消失並且效力可以持續一段特定的時間
 - 使用 timedelta (待補充)
 	- 可以計算時間，在這裡可以替session設定資料的保存期限。
 	- 可以以「minutes」或 「days」為單位來設定	 	
