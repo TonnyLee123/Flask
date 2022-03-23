@@ -1,29 +1,46 @@
-到目前為止，網站頁面中都只有靜態的文字。如果我們單純透過Python來產出一頁頁HTML標籤，並不是一件輕鬆的事
-，Flask預設使用Jinja2樣版引擎。將HTML頁面與後台應用程式聯繫起來，達到簡化HTML輸出的目的。
+目前為止，網站頁面都只有些許靜態的文字，但實際一個網站是由複雜的HTML組成，為了使程式看起來簡潔，Flask預設使用Jinja2樣版引擎，將HTML頁面與後台應用程式聯繫起來。
 # Template Engine
 - 可以在 HTML file 中使用特殊語法來操作變量。
 - 作用: 讀取並執行模板中的特殊語法標記，並根據傳入值傳給變數，輸出成最終的HTML頁面，以上過程稱為 rendering (渲染)
 - Jinja2 
-- render_template(“網頁檔案名稱.html”, 參數與區域變數)
+- 
 ## Jinja2 
-- 讓我們可以寫python語法，但並不適用於全部。
-### 語法
+- 允許部分python語法。
+### Syntax
+#### 1. print variable
 ```
-#1 keyword
-{% if %}
-  ...
+{{ variable }}
+```
+```python
+list = ['apple', 'banana']
+dict = {'name': 'Tony', 
+	'age': '20'}
+	
+# Python
+lis[0]
+dict['name']
+
+# Template
+{{ list.0 }}
+{{ dict.name }}
+```
+
+#### 2. if statement 
+```python
+{% if user %}
+    歡迎，{{ user }}!
+{% else %}
+    請註冊帳號。
 {% endif %}
-
-#2 print
-{{ ... }}
-
-#3 comment
-{# ... #}
-
-#4 '.'獲取變數屬性
-user.username
 ```
-### render_template()
+#### 3. for loop
+```python
+{% for user in users %}
+    <li> {{ user }} </li>
+{% endfor %}
+```
+
+### render_template("檔案名稱.html", local_variable)
 ```python
 from flask import render_template
 mylist = [1, 2, 3]
@@ -122,48 +139,7 @@ get_id()
 -把HTML檔案放在templates目錄中，這樣子render_template才有辦法載入HTML檔案。
 
 
-變數
-樣板要顯示的變數，可以是一般的變數，也可以是字典（dict）或串列（list）。Jinja2樣板的語法與Python的語法有些不同處，使用上要注意。
-串列（list）：Python中的語法是 list_name[num]而在樣板語言則是：{{list_name.0}}
-例如：
 
-```python
-list_foods = ['apple','banana']
-
-//Python
-list_foods[0]
-list_foods[1]
-
-//Template
-{{list_foods.0}}
-{{list_foods.1}}
-
-dict_foods = {'1':'apple','2':'banana','3':'candy'}
-
-//Python
-dict_foods['1']
-dict_foods['2']
-dict_foods['3']
-
-//Template
-{{dict_foods.1}}
-{{dict_foods.2}}
-{{dict_foods.3}}
-```
-
-### if statement 
-
-{% if user %}
-    歡迎，{{ user }}!
-{% else %}
-    歡迎，第一次來本站。
-{% endif %}
-### for loop
-
-<ul>
-    {% for item in news %}
-    	<li>{{ item }}</li>
-    {% endfor %}
 	
 	
 #範本繼承
