@@ -116,3 +116,20 @@ User.query.get(1)
 ### 定義一對多模型
 Step1. 設定 db.relationship(…) 關係  
 Step2. 設定 db.ForeignKey(…) 關係
+Product 和 AddToCar 這兩個部分，他們的關係為一對多 (表示為一個 Product 可以被多個 AddToCar 包含)  
+首先 Product (一對多的一) 的部分需要設定 db.relationship() 來讓 SQLAlchemy 知道 Product 和 AddToCar 是有關聯的，而 backref=”product” 中的 product 則像是暗號，未來在讀取 AddToCar 表格時，後面只需像這樣加上 AddToCar.product，就可以輕鬆讀取到 Product 表格內的資料囉！
+再來 AddToCar (一對多的多) 的部分需要設定 db.ForeignKey() 來告訴 SQLAlchemy 當兩張表連結時要以什麼為外接的 key。
+
+```python
+ class User(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        name = db.Column(db.String(80))
+        email = db.Column(db.String(120), unique=True)
+        posts = db.relationship('Post', backref='user')
+
+
+    class Post(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        content = db.Column(db.Text)
+        user_id = db.Column(db.Integer, db.ForeignKey('user.id')
+```
