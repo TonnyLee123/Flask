@@ -120,3 +120,21 @@ is_anonymous
 get_id()
 取得當前用戶id
 -把HTML檔案放在templates目錄中，這樣子render_template才有辦法載入HTML檔案。
+
+
+變數
+樣板要顯示的變數，可以是一般的變數，也可以是字典（dict）或串列（list）。Jinja2樣板的語法與Python的語法有些不同處，使用上要注意。
+串列（list）：Python中的語法是 list_name[num]而在樣板語言則是：{{list_name.0}}
+例如：
+
+```python
+list_foods = ['apple','banana']
+
+//Python
+list_foods[0]
+list_foods[1]
+
+//Template
+{{list_foods.0}}
+{{list_foods.1}}
+```
