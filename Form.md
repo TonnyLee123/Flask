@@ -22,6 +22,9 @@
 	</body>
 </html>
 ```
+output
+
+![image](https://user-images.githubusercontent.com/90739897/159725435-4e2a3878-5cf2-4057-88f6-7b201cb57d48.png)
 
 
 ## 建立 routes 並 傳遞表單資料到 user page
@@ -29,11 +32,9 @@
 - request.form["inuput.name"]
 
 request.form[“nm”]。
-在 "login函式" 加上if…else…
-當user透過POST傳遞資料時,
-就抓取表單中 name 為 "nm" 的值，並且指定給變數user後，
 
-；否則就直接解析login.html樣版並呈現給使用者。
+
+抓取表單中 name 為 "nm" 的值，並且指定給變數user後
 ```python
 from flask import Flask, redirect, url_for, render_template,request
 app = Flask(__name__)
@@ -56,6 +57,8 @@ if __name__ =="__main__":
     app.run(debug=True)
 ```
 #### 問題點
+無法在其他頁面保持登入
+只有在目前的頁面是登入狀態，
 去其他頁面後再回來，要求重新輸入帳號。
 
 #### 解決方式：使用sessions
