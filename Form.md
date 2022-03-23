@@ -92,17 +92,20 @@ app.secret_key = "#230dec61-fee8-4ef2-a791-36f9e680c9fc"
 
 ### 3.2 修改login函式
 ```python
+#login
 @app.route("/", methods=["POST","GET"])
 def login():
     if request.method == "POST":
-        user = request.form["nm"] # 用來接收在表單輸入的資料
-        session["USER"] = user  # session是(global)字典, 新增 key(USER) 和 value(user)
-        return redirect(url_for("user")) # 不需要傳遞user值
+        user = request.form["nm"]
+        session["USER"] = user
+        return redirect(url_for("user"))
     else:
-        return render_template("login.html")
+   	# 可避免已登入的用戶透過在URL bar 輸入 /login 回到 login_page
+        if "USER" in session:                 # 如果session內已經有user資料(表示已經登入)
+            return redirect(url_for("user"))  # 則回到user頁面
+      
+        return render_template("login.html")  # 如果還沒登入則回到login_page(最一開始)
 ```
-
-然後，將資料傳給user頁面。
 
 ### 3.3 修改user函式
 在user函式中取得傳來的session資料：
@@ -159,18 +162,7 @@ def logout():
 ```
 為了配合logout的使用，也需要修改login的部分，讓已經有session紀錄（session[“user”]）的使用者，從login的路由，直接被導向user頁面。
 ```python
-#login
-@app.route("/", methods=["POST","GET"])
-def login():
-    if request.method == "POST":
-        user = request.form["nm"]
-        session["USER"] = user
-        return redirect(url_for("user"))
-    else:
-        if "USER" in session:
-            return redirect(url_for("user"))  
-      
-        return render_template("login.html")
+
 ```
 ### 總結3 
 ```python
