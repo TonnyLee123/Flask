@@ -1,41 +1,30 @@
 # POST form
 ### 補充html 表單
-## 建立 form
-```python
-from flask import Flask, redirect, url_for, render_template,request
-```
-建立login函式對應login路由，並在route中宣告使用POST與GET兩種HTTP存取方式，對應的HTML樣板則是login.html：
-```python
-@app.route("/login", methods=["POST","GET"])
-def login():
-    return render_template("login.html")
-```
-建立user函式與路由：
-```python
-@app.route("/<user>")
-def user(user):
-    return render_template("user.html",user=user)
-```
-建立HTML樣板，樣板裡面放form表單，使用POST方法。
+
+## 1. 建立HTML樣板
 ```html
-{% extends "base.html" %}
-{% block title %}登入{% endblock %}
+<html>
+	<head>
+		<title> 網頁標題 </title>
+		<meta charset="utf-8">
+	</head>
 
-{% block body %}
-<form action="#" method="post"> 
-  <div class="form-group"> 
-    <label for="username">Name:</label> 
-    <input id="username" class="form-control" type="text" name="nm" />
-  </div> 
-  
-  <div class="form-group"> 
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </div> 
-</form>
-
-{% endblock %}
+	<body>
+		<form action="#" method="post">
+		  <div class="form-group">
+		    <label for="username">Name:</label>
+		    <input id="username" class="form-control" type="text" name="nm" />
+		  </div>
+		  <div class="form-group">
+		    <button type="submit" class="btn btn-primary">Submit</button>
+		  </div>
+		</form>
+	</body>
+</html>
 ```
-## 傳遞表單資料
+
+
+## 建立 routes 並 傳遞表單資料到 user page
 - 取得使用者在表單上輸入的資料
 - request.form["inuput.name"]
 
@@ -43,22 +32,28 @@ request.form[“nm”]。
 在 "login函式" 加上if…else…
 當user透過POST傳遞資料時,
 就抓取表單中 name 為 "nm" 的值，並且指定給變數user後，
-將網頁導向user頁面，並且將user的值帶入該頁面
+
 ；否則就直接解析login.html樣版並呈現給使用者。
 ```python
 from flask import Flask, redirect, url_for, render_template,request
-@app.route("/", methods=["POST","GET"])
+app = Flask(__name__)
+
+#login page
+@app.route("/", methods=["POST","GET"]) # 使用POST與GET兩種HTTP存取方式
 def login():
-    if request.method == "POST":
-        user = request.form["nm"]
-        return redirect(url_for("user",user=user))
+    if request.method == "POST": # 當發送POST請求時(按下submit)
+        user = request.form["nm"] # 把輸入在 form 的值 assign 給 user
+        return redirect(url_for("user",user=user)) # 導向user頁面，並將 user 的值傳入該頁面
     else:
-        return render_template("login.html")
+        return render_template("login.html") # 否則使用login.html樣版
 
 #user page
 @app.route("/<user>")
 def user(user):
-    return render_template("user.html",user=user)
+    return render_template("user.html", user=user)
+    
+if __name__ =="__main__":
+    app.run(debug=True)
 ```
 #### 問題點
 去其他頁面後再回來，要求重新輸入帳號。
@@ -73,9 +68,90 @@ def user(user):
 ```python
 from flask import session
 ```
+修改login函式
 ```python
+@app.route("/login", methods=["POST","GET"])
+def login():
+    if request.method == "POST":
+        user = request.form["nm"]
+        session["user"] = user  # 只需新增這行
+        return redirect(url_for("user")) # 不需要傳遞user值
+    else:
+        return render_template("login.html")
+```
+session的型態是字典
+然後，將資料傳給user頁面。
+由於有了session，需要修改原來的 return redirect(url_for(“user”,usr=user))，改為只要轉址到user頁面，而不需要再透過原來的方式傳遞user值。
+
+修改user函式
+在user函式中取得傳來的session資料：
+首先我們先判斷是否從session中取得user這個key，如果已經取得到了再把user這個key的value取出來放到user變數中，最後將值回傳。反之，若沒有從session中取得user這個key，就表示使用者尚未登入，我們可以將使用者導引至login的頁面。因此我們將user函式改為：
+```python
+@app.route("/user")
+def user():
+    if "user" in session:
+        user = session["user"]
+        return render_template("user.html",user=user)
+    else:
+        return redirect(url_for("login"))
+```
+
+設定secret_key
+```python
+app.secret_key = "#230dec61-fee8-4ef2-a791-36f9e680c9fc"
+```
+最後
+```python
+from flask import Flask, redirect, url_for, render_template, request, session
+app = Flask(__name__)
+app.secret_key = "#230dec61-fee8-4ef2-a791-36f9e680c9fc"
+#login
+@app.route("/login", methods=["POST","GET"])
+def login():
+    if request.method == "POST":
+        user = request.form["nm"]
+        session["user"] = user
+        return redirect(url_for("user"))
+    else:
+        return render_template("login.html")
+
+@app.route("/user")
+def user():
+    if "user" in session:
+        user = session["user"]
+        return render_template("user.html",user=user)
+    else:
+        return redirect(url_for("login"))
+if __name__ =="__main__":
+app.run(debug=True)
+```
+
+# Logout
+目前為止，想刪除session內的資料，必須手動關閉瀏覽器。若要在不關閉瀏覽器的狀態下就刪除session的話該如何處理？
+使用「登出」的方式來達成。
+首先建立一個logout的路由，再透過session.pop()刪除資料
+當程式清除session紀錄之後，隨即讓頁面導向login頁。
+```python
+@app.route("/logout")
+def logout():
+    session.pop("user", None) # 將session裡面記錄的user清除
+    return redirect(url_for("login"))
 ```
 ```python
+
 ```
 ```python
+
+```
+```python
+
+```
+```python
+
+```
+```python
+
+```
+```python
+
 ```
