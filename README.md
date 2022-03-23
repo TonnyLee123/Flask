@@ -137,4 +137,39 @@ list_foods[1]
 //Template
 {{list_foods.0}}
 {{list_foods.1}}
+
+dict_foods = {'1':'apple','2':'banana','3':'candy'}
+
+//Python
+dict_foods['1']
+dict_foods['2']
+dict_foods['3']
+
+//Template
+{{dict_foods.1}}
+{{dict_foods.2}}
+{{dict_foods.3}}
 ```
+
+### if statement 
+
+{% if user %}
+    歡迎，{{ user }}!
+{% else %}
+    歡迎，第一次來本站。
+{% endif %}
+### for loop
+
+<ul>
+    {% for item in news %}
+    	<li>{{ item }}</li>
+    {% endfor %}
+	
+	
+#範本繼承
+一個網站中，很多頁面的部分內容是一樣的，如頁首、頁尾、以及導覽區、廣告區等等。Jinja2可以將網頁裡內容一樣的部分抽出來放在基本樣板中，並且套用到同一系列的子樣板網頁上。
+# 基本樣板
+存放共用內容的檔案。一般我們會將它命名為base.html，用這個檔案來設定網站的HTML基本架構。你可以將共通的部分放在這裡：
+例如：<html>、<head>與<body>，以及<head>裡面放頁面標題的<title>、頁面關鍵字與說明的<meta>、CSS樣式檔的<link>與javaScript檔案的<script>。
+# 子樣板
+由於基本範本是HTML頁面共通的部分，在製作上我們不再需要重複這部分的內容，只要在其他頁面裡繼承基本範本的內容就可以。繼承的方式是在子樣本中使用{% extends %}這個關鍵字來呼叫base.html。這表示這個子範本繼承了base.html範本。
