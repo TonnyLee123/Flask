@@ -3,7 +3,6 @@
 - Python的library
 - 提供**表單呈現**及**驗證**等功能。
 - https://wtforms.readthedocs.io/en/2.3.x/
-- 
 ## 核心概念
 Forms 是 WTForms 最主要的核心容器。
 Forms是Fields欄位的集合，可以選擇透過字典（dictionary）或屬性（attribute）的方式來接觸它們。
@@ -28,10 +27,7 @@ Forms是Fields欄位的集合，可以選擇透過字典（dictionary）或屬�
 ```python
 pip install WTForms
 ```
-## 匯入套件
-```python
-from wtforms import Form, BooleanField, StringField, validators
-```
+
 # Flask-WTF
 - Python的函式庫
 - 將 Flask 應用程式與 WTForms 整合。
@@ -41,18 +37,11 @@ from wtforms import Form, BooleanField, StringField, validators
 ```python
 pip install Flask-WTF
 ```
-## 匯入套件
-```python
-from flask_wtf import FlaskForm
-```
-除了匯入Flask-WTF外，還要匯入WTForms。因為Flask-WTF的功能是幫助把Flask應用程式與WTForms整合，不過我們只要匯入fields，如果需要欄位驗證的話也要匯入validators來驗證欄位。
+
 # 建立表單
 建一個類別, 其繼承的是FlaskForm，而前面的wtforms繼承的是Form。
-建立了一個名為RegForm的類別，透過這個類別來讓使用者登入。
+建立了RegForm的類別，透過這個類別來讓使用者登入。
 
-
-validate_on_submit()
-- 當表單被submit時，才會啟動 validate() 功能。validate功能是form.is_submitted()與form.validate()的縮寫。
 # WTF Form 實作
 ## 匯入套件
 ```python
@@ -84,7 +73,7 @@ class MyForm(FlaskForm):
     others= TextAreaField()
     submit = SubmitField("確認")
 ```
-設定validators屬性。屬性中放置DataRequired，此欄位為必填欄位，在確認時會檢查使用者是否確實輸入這個欄位。
+validators屬性。屬性中放置DataRequired，代表此欄位為必填欄位，在確認時會檢查使用者是否確實輸入這個欄位。
 
 ## 設定路由
 兩個頁面，首頁接收表單資訊，thankyou頁面顯示使用者輸入的資料
@@ -110,6 +99,8 @@ def thankyou():
 ```
 validate_on_submit()
 - 當表單被submit時，才會啟動 validate() 功能。validate功能是form.is_submitted()與form.validate()的縮寫。
+- Check if it is a POST request and if it is valid.
+- 
 ## 樣板製作
 home.html
 .label 欄位名稱
