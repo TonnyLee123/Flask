@@ -198,3 +198,18 @@ block預留一個空位，等之後套用這個樣板的頁面就可以填上
     Welcome on my awesome homepage.
 {% endblock %}
 ```
+靜態檔案
+
+哪些是靜態檔案
+瀏覽器在呈現完整畫面時所需要的資源檔案，如JavaScript、CSS、img等。
+如何在Flask裡面使用靜態檔案
+如何有效地組織靜態檔案始終是所有網站框架所關心的問題。Flask也不例外，它提供了一種在應用程式中組織靜態文件的特定方法，如下所示：
+
+![image](https://user-images.githubusercontent.com/90739897/159871453-609d5c71-9250-46bb-b1e2-907e1fb569e3.png)
+
+
+在這個結構裡面，假設我們想要在template樣板中呈現logo.png時，我們可以使用以下方式來引用靜態檔案：
+<img src='/static/images/logo.png'>
+
+Flask預設會自動讀取該static資料夾裡面的內容
+static與hello.py位於同一資料層級的位置。
