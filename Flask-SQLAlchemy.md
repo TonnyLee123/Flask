@@ -271,3 +271,112 @@ Product 和 AddToCar 這兩個部分，他們的關係為一對多 (表示為一
 query = Post.query.first()
 print(query.user.name)  
 ```
+# ORM（Object-relational Mapping）
+會在 Database 和 Application 之間做 mapping
+ORM 會在背後自動將 Python 代碼轉換成應對的SQL語法，再來進行對資料庫的操作。換句話說，開發者可以直接用 Python 的語法對資料庫進行操作，不需要再去寫複雜的SQL語法處理資料的選取，只需要簡單的操作物件的屬性與方法就可以達到寫SQL語法的效果。
+另外，ORM提供了獨立於SQL的介面，它會自己處理不同資料庫之間的差異，因此便於移轉資料庫。並且使用快取最佳化技術可以加強資料庫操作的效率。
+
+## 安裝Flask-SQLAlchemy
+```python
+pip install flask-sqlalchemy
+```
+## 載入
+```python
+from flask_sqlalchemy import SQLAlchemy
+```
+## config：設定資料庫連線
+```python
+app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///users.sqlite3' # 用來設定SQLite資料庫檔案路徑。
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app) # 建立SQLAlchemy物件。一旦建立了物件之後，就會提供一個名為Model的類別。
+```
+## Model
+建立User類別，該類別繼承了db.Model
+```python
+class Users(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True) # primary_key 會自動產生
+    name = db.Column('name', db.String(100))
+    email = db.Column(db.String(100))
+    
+    def __init__(self, name, email):
+        self.name =name
+        self.email = email
+```
+![image](https://user-images.githubusercontent.com/90739897/159874353-ba72a413-d1b1-4929-b47c-b4a0b209aeb1.png)
+# create_all()
+
+```python
+if __name__ =="__main__":
+    db.create_all() # 建立初始化的資料庫
+    app.run(debug=True)
+```
+
+```python
+pip install flask-sqlalchemy
+```
+
+```python
+pip install flask-sqlalchemy
+```
+```python
+pip install flask-sqlalchemy
+```
+```python
+pip install flask-sqlalchemy
+```
+# 實作
+user.html
+```html
+<html>
+	<head>
+		<title> 網頁標題 </title>
+		<meta charset="utf-8">
+	</head>
+
+	<body>
+		<div class="jumbotron jumbotron-fluid">
+	  		<div class="container">
+			    <h1 class="display-4">Hello {{user}}</h1>
+			    <p class="lead">歡迎 {{user}}來到會員專區</p>
+			    <form action="#" method="post">
+			    <div class="form-group">
+			        <input type="email" name="email" class="form-control" placeholder="請輸入email" value="{{email if email}}">
+			    </div>
+			    <div class="form-group">
+			        <button type="submit" class="btn btn-primary">確認送出Email</button>
+	        	</div>
+				</form>
+		   </div>
+		</div>
+	</body>
+</html>
+```
+
+
+view.html  
+頁面中顯示所有進入user資料庫的紀錄。
+```html
+<html>
+	<head>
+		<title> 網頁標題 </title>
+		<meta charset="utf-8">
+	</head>
+
+	<body>
+		<div class="jumbotron jumbotron-fluid mt-5">
+		<div class="container">
+		<h1 class="display-4">查看所有名單</h1>
+
+		<ul class="list-group">
+		{% for item in values%}
+			<li class="list-group-item">
+			<h5 class="mb-1">姓名： {{item.name}}</H5>
+			<p class="mb-1">電子郵件： {{item.email}}</p>
+			</li>
+		{% endfor %}
+		</ul>
+		</div>
+		</div>
+</html>
+
+```
