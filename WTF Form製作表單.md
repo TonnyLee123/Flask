@@ -11,7 +11,17 @@ Fields則將大部分粗重的工作攬在身上。每個Fields欄位都代表�
 每個Fields欄位都有一個widget實例。widget的工作是呈現該Fields欄位對應的HTML標籤。你可以指定Widget實例給每個特定的Fields欄位，不過在預設的情況下每個Fields欄位都有一個widget實例。
 有一些Fields欄位設置的目的只是為了工程師使用上方便，舉例來說TextAreaField只是一個字串欄位（StringField），而預設的widget是TextArea。
 為了提供各種驗證規則，Fields欄位包含了一系列的驗證方式。
-StringField是字串欄位 、BooleanField 布林邏輯判斷欄位、DateTimeField為日期欄位、RadioField 為單選選單、SelectField為下拉選單、TextField文字選單、TextAreaField文字區塊選單以及SubmitField的確認選單。
+- StringField
+- BooleanField (可複選吧?)
+- <img src = 'https://i.stack.imgur.com/YGNnE.png' width = 200>
+- RadioField (單選)
+- DateTimeField
+- SelectField
+- ![img](https://i.stack.imgur.com/lFiU0.png)
+- TextField
+- TextAreaField
+- ![img](https://i.stack.imgur.com/JJ5Kw.png)
+- SubmitField
 ## 安裝
 ```python
 pip install WTForms
