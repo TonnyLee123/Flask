@@ -91,8 +91,9 @@ form = MyForm()
 ```python
 return render_template("login.html", form = form)
 ```
-## 第一種路由
+## 1. 範例一 單純顯示form在網頁上(簡易版)
 ```python
+# app.py
 from flask import Flask, render_template
 from form import MyForm
  
@@ -105,24 +106,37 @@ def hello_world():
     form = MyForm()
     return render_template("login.html", form = form)
 ```
-## 在home_page中，透過 session方式 將表單個欄位的資料儲存，並導向至 result_page.
-新建兩頁面:
-1. home: 讓使用者輸入表單
-2. result: 顯示使用者輸入的資料
+## 2. 範例二: 在home_page中，透過 session 方式 將user在表單填入的資料儲存，並導向至 result_page.
+### 新建兩個route:
+- 1. home: 讓使用者輸入表單
+- 2. result: 顯示使用者輸入的資料
 ```python
+from flask import Flask, render_template, session, redirect, url_for
+from form import MyForm
+from flask_wtf import FlaskForm 
+from wtforms import (StringField, BooleanField, DateTimeField,
+                     RadioField, SelectField, TextField,
+                     TextAreaField, SubmitField)                     
+from wtforms.validators import DataRequired
+
+app = Flask(__name__)
+app.config['SECRET_KEY']='mykey'
+
+# home
 @app.route('/',methods=['GET','POST'])
-def index():
+def home():
     form = MyForm()
     if form.validate_on_submit():
         session['name'] = form.name.data  # 把在表單輸入的資料存到session
         session['agreed'] = form.agreed.data
         session['gender'] = form.gender.data
         session['hobby'] = form.hobby.data
+
         return redirect(url_for('result'))
     # 如果沒有提交表單:   
-    return render_template('home.html', form=form)
+    return render_template('home.html', form = form)
     
-# result頁面
+# result 
 @app.route('/result')
 def result():
     return render_template('result.html') 
@@ -131,8 +145,64 @@ validate_on_submit()
 - 當 form submit 時，才會啟動 validate()。
 - validate功能:
     - Check if it is a POST request and if it is valid.
-## 樣板製作
-如果需要調整CSS的話，只要在括弧裡面加上CSS的Class
-把存在session裡面的資料顯示出來。
+## Template
+### 1. home.html
+```html
+<html>
+	<head>
+		<title> 網頁標題 </title>
+		<meta charset="utf-8">
+	</head>
 
-https://medium.com/seaniap/python-web-flask-%E7%94%A8wtf-form%E8%A3%BD%E4%BD%9C%E8%A1%A8%E5%96%AE-1f4af213ea88
+	<body>
+		<form method="POST">
+			{{form.hidden_tag()}}
+  			{{form.name.label(class='form-label')}} 
+  			{{form.name(class='form-control')}}  
+  			<br>
+			{{form.gender.label(class='form-label')}} 
+  			{{form.gender()}}
+  			<br>
+  			{{form.hobby.label(class='form-label')}} 
+  			{{form.hobby(class='form-control')}}
+  			<br>
+  			{{form.agreed.label(class='form-label')}} 
+  			{{form.agreed(class='form-control')}} 
+  			<br>
+  			{{form.submit(class='btn btn-primary')}}
+		</form>
+	</body>
+</html>
+```
+- 新增CSS: 在括弧裡加CSS的Class
+```
+{{form.name.label(class='form-label')}} 
+```
+### 2. result.html
+```html
+<html>
+	<head>
+		<title> Result </title>
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<div>
+			<p>以下為您填入的資料</p>
+			<ul>
+				<li>名字: {{session['name']}}</li>
+				<li>性別: {{session['gender']}}</li>
+				<li>興趣: {{session['hobby']}}</li>
+				<li>是否加入: {{session['agreed']}}</li>
+			</ul>
+		</div>
+	</body>
+</html>
+```
+- 把存在 session 裡的資料顯示出來。
+```
+{{session['name']}}
+```
+### 示意圖
+![form02](https://user-images.githubusercontent.com/90739897/160236482-e81ad795-62d8-4334-88a6-db3ed0c76b46.png)
+
+![image](https://user-images.githubusercontent.com/90739897/160236470-9e19350f-be4f-4407-8950-1ae9d515a222.png)
