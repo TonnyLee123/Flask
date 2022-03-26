@@ -69,11 +69,10 @@ app.config['SECRET_KEY']='mykey' # 加上SECRET KEY的設定
 設定一個表單欄位的Class，取名為MyForm，這個Class係繼承FlaskForm的類別。
 ```python
 class MyForm(FlaskForm):
-    name = StringField('你的名字', validators=[DataRequired()]) # 你的名字是 label
-    agreed = BooleanField('同意加入這個組織？')
-    gender = RadioField('請輸入性別', choices=[('M','男生'),('F','女生')])
-    hobby = SelectField('你的興趣', choices=[('sports','運動'),('travel','旅遊'),('movie','電影')])
-    others= TextAreaField()
+    name = StringField('名字', validators=[DataRequired()]) # 你的名字是 label
+    gender = RadioField('性別', choices=[("man", '男生'), ("girl", '女生')])
+    hobby = SelectField('興趣', choices=[('sports','運動'),('travel','旅遊'),('movie','電影')])
+    agreed = BooleanField('加入組織？')
     submit = SubmitField("確認")
 ```
 validators屬性。屬性中放置DataRequired，代表此欄位為必填欄位，在確認時會檢查使用者是否確實輸入這個欄位。
