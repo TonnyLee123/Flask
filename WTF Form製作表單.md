@@ -37,7 +37,9 @@ pip install WTForms
 ```python
 pip install Flask-WTF
 ```
-
+# 新增一個form.py
+- 裡面包含各種class(form)
+- 
 # 建立表單
 建一個類別, 其繼承的是FlaskForm，而前面的wtforms繼承的是Form。
 建立了RegForm的類別，透過這個類別來讓使用者登入。
