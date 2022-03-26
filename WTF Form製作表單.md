@@ -1,4 +1,5 @@
 先前使用 request.form 獲得使用者在表單上輸入的資料。
+補充 flash
 # WTForms
 - Python的library
 - 提供**表單呈現**及**驗證**等功能。
