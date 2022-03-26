@@ -15,6 +15,8 @@ app = Flask(__name__)
 def home():
     return "<p>Hello, World!</p>" # 要顯示在網頁上的內容，HTML格式
     
+# 透過 flask run 不會用到以下代碼
+# python app.py 才會
 if __name__ == '__main__':
     app.run()
 ```
@@ -25,6 +27,7 @@ if __name__ == '__main__':
 **通過export FLASK_APP environment variable來告訴terminal要使用的application**
 ```cmd
 set FLASK_APP = app.py
+# set Flask_DEBUG = 1
 flask run
 
 # 加上其他指令
