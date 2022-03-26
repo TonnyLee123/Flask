@@ -57,93 +57,82 @@ from wtforms import (StringField, BooleanField, RadioField, SelectField, TextFie
 from wtforms.validators import DataRequired
 ```
 
-## 補充secret key功能
 
 ```python
 app = Flask(__name__)
 app.config['SECRET_KEY']='mykey' # 加上SECRET KEY的設定
 ```
 ## 設定FormField
-設定一個表單欄位的Class，取名為MyForm，這個Class係繼承FlaskForm的類別。
+透過Class 定義 Form, 每個 Field 的種類, 限制等等。
+- validators attribute
+    - DataRequired: 此欄位為必填欄位，在確認時會檢查使用者是否確實輸入這個欄位。
 ```python
-class MyForm(FlaskForm):
+class MyForm(FlaskForm): # 取名MyForm，繼承FlaskForm類別。
     name = StringField('名字', validators=[DataRequired()]) 
     gender = RadioField('性別', choices=[("man", '男生'), ("girl", '女生')])
     hobby = SelectField('興趣', choices=[('sports','運動'),('travel','旅遊'),('movie','電影')])
     agreed = BooleanField('加入組織？')
     submit = SubmitField("確認")
 ```
-validators屬性。屬性中放置DataRequired，代表此欄位為必填欄位，在確認時會檢查使用者是否確實輸入這個欄位。
-
-## 設定路由
-兩個頁面，首頁接收表單資訊，thankyou頁面顯示使用者輸入的資料
+![formexp](https://user-images.githubusercontent.com/90739897/160233142-71d4ff4f-ca6a-4ab1-9edc-3713eb2aa83b.png)
+## 設定 secret key
+補充 為甚麼要設?
 ```python
-＃建立首頁
-# 在index函式中，透過session的方式將表單個欄位的資料儲存起來。並導向至 thankyou 的頁面。
+app.config['SECRET_KEY']='mykey'
+```
+
+## 創建 MyForm 實例
+補充 為甚麼在很多地方都會看到要創建實例?
+- 才能使用class內的東西(變數, function, 等等)
+```python
+form = MyForm()
+```
+## 將 form 傳入 html
+```python
+return render_template("login.html", form = form)
+```
+## 第一種路由
+```python
+from flask import Flask, render_template
+from form import MyForm
+ 
+app = Flask(__name__) 
+
+app.config['SECRET_KEY']='mykey'
+
+@app.route("/")
+def hello_world():
+    form = MyForm()
+    return render_template("login.html", form = form)
+```
+## 在home_page中，透過 session方式 將表單個欄位的資料儲存，並導向至 result_page.
+新建兩頁面:
+1. home: 讓使用者輸入表單
+2. result: 顯示使用者輸入的資料
+```python
 @app.route('/',methods=['GET','POST'])
 def index():
-    form = MyForm() # 建立instance
+    form = MyForm()
     if form.validate_on_submit():
         session['name'] = form.name.data  # 把在表單輸入的資料存到session
         session['agreed'] = form.agreed.data
         session['gender'] = form.gender.data
         session['hobby'] = form.hobby.data
-        session['others'] = form.others.data
-        return redirect(url_for('thankyou'))
+        return redirect(url_for('result'))
+    # 如果沒有提交表單:   
     return render_template('home.html', form=form)
     
-# thank you頁面
-@app.route('/thankyou')
-def thankyou():
-    return render_template('thankyou.html') 
+# result頁面
+@app.route('/result')
+def result():
+    return render_template('result.html') 
 ```
 validate_on_submit()
-- 當表單被submit時，才會啟動 validate() 功能。validate功能是form.is_submitted()與form.validate()的縮寫。
-- Check if it is a POST request and if it is valid.
-- 
+- 當 form submit 時，才會啟動 validate()。
+- validate功能:
+    - Check if it is a POST request and if it is valid.
 ## 樣板製作
-home.html
-.label 欄位名稱
-.neme 框框
-```html
-{% block content %}
-<div class="container">
-<form method="POST"> <!-- form 表單 -->
-  {{form.hidden_tag()}}
-  {{form.name.label(class='form-label')}} 
-  {{form.name(class='form-control')}} 
-  <br>
-  {{form.agreed.label(class='form-label')}} 
-  {{form.agreed(class='form-control')}} 
-  <br>
-  {{form.gender.label(class='form-label')}} 
-  {{form.gender()}}
-  <br>
-  {{form.hobby.label(class='form-label')}} 
-  {{form.hobby(class='form-control')}}
-  <br>
-  {{form.others.label(class='form-label')}} 
-  {{form.others(class='form-control')}}
-  <br>
-  {{form.submit(class='btn btn-primary')}}
-</form>
-</div>
-{% endblock %}
-```
 如果需要調整CSS的話，只要在括弧裡面加上CSS的Class
 把存在session裡面的資料顯示出來。
-```html
-{% block content %}
-<div class="container">
-<p>感謝填寫，以下是您提供的訊息</p>
-<ul>
-<li>名字: {{session['name']}}</li>
-<li>同意加入這個組織: {{session['agreed']}}</li>
-<li>性別: {{session['gender']}}</li>
-<li>興趣: {{session['hobby']}}</li>
-<li>其他: {{session['others']}}</li>
-</ul>
-</div>
-{% endblock %}
-```
+
 https://medium.com/seaniap/python-web-flask-%E7%94%A8wtf-form%E8%A3%BD%E4%BD%9C%E8%A1%A8%E5%96%AE-1f4af213ea88
