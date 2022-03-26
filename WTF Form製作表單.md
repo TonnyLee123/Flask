@@ -56,7 +56,7 @@ from wtforms import (StringField, BooleanField, DateTimeField,
 from wtforms.validators import DataRequired
 ```
 
-##
+## 補充secret key功能
 
 ```python
 app = Flask(__name__)
