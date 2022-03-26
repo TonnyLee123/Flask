@@ -17,7 +17,8 @@ Forms是Fields欄位的集合，可以選擇透過字典（dictionary）或屬�
 - <img src = 'https://i.stack.imgur.com/YGNnE.png' width = 200>
 - RadioField (單選)
 - DateTimeField
-- SelectField
+- SelectField(label, choices=[(value, label),(),(),...], coerce=unicode, option_widget=None, validate_choice=True)
+Select fields with static choice values:
 - ![img](https://i.stack.imgur.com/lFiU0.png)
 - TextField
 - TextAreaField
