@@ -53,9 +53,7 @@ from flask import Flask, render_template, session, redirect, url_for
 # 本次學習的套件
 from flask_wtf import FlaskForm 
 
-from wtforms import (StringField, BooleanField, DateTimeField,
-                     RadioField, SelectField, TextField,
-                     TextAreaField, SubmitField)                     
+from wtforms import (StringField, BooleanField, RadioField, SelectField, TextField, TextAreaField, SubmitField)                     
 from wtforms.validators import DataRequired
 ```
 
@@ -69,7 +67,7 @@ app.config['SECRET_KEY']='mykey' # 加上SECRET KEY的設定
 設定一個表單欄位的Class，取名為MyForm，這個Class係繼承FlaskForm的類別。
 ```python
 class MyForm(FlaskForm):
-    name = StringField('名字', validators=[DataRequired()]) # 你的名字是 label
+    name = StringField('名字', validators=[DataRequired()]) 
     gender = RadioField('性別', choices=[("man", '男生'), ("girl", '女生')])
     hobby = SelectField('興趣', choices=[('sports','運動'),('travel','旅遊'),('movie','電影')])
     agreed = BooleanField('加入組織？')
