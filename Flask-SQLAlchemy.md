@@ -367,4 +367,7 @@ print(post.title)
 post = Post.query.first()
 post
 post.author
+
+---
+db.drop_all() 刪除db內所有資料
 ```
