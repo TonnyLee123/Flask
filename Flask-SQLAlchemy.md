@@ -329,4 +329,42 @@ db.create_all
 from app.py import User, Post
 user_1 = User(username = 'Tony', email = '123@demo.com')
 user_2 = User(username = 'James', email = '456@demo.com')
+# 加入資料到table
+db.session.add(user_1)
+db.session.add(user_2)
+# 提交
+db.session.commit()
+# Accessing data in DB
+### 1. Get all user
+User.query.all() return list
+### 2. Get first user
+# list中的第一個
+User.query.first()
+### 3. Filter result
+User.query.filter_by(username = 'Tony').all()
+
+user = User.query.filter_by(username = 'Tony').first()
+user
+user.id
+user.name
+
+
+### 4. Get id為1的user 
+User.query.get(1)
+
+post_1 = Post(title = "Blog 1", content = "First Post", user_id = user.id)
+post_2 = Post(title = "Blog 2", content = "Second Post", user_id = user.id)
+db.session.add(post_1)
+db.session.add(post_2)
+db.session.commit()
+
+user.posts
+for p in user.posts:
+print(post.title)
+
+
+---
+post = Post.query.first()
+post
+post.author
 ```
