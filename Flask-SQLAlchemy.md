@@ -37,20 +37,26 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 # 物件建立後，會提供一個名為Model的class。
 db = SQLAlchemy(app)
 
+# database structure
 # 建立 Model
 class User(db.Model): # 繼承db.Model
     id = db.Column("id", db.Integer, primary_key=True)
     username = db.Column("username", db.String(80), unique=True, nullable=False)
     email = db.Column("email", db.String(120), unique=True, nullable=False)
-
+    # how object is printed when we print it out
     def __repr__(self):
         return f"User('{self.id}', '{self.username}', '{self.email}')"
 ```
 app.config['SQLALCHEMY_DATABASE_URI'] = [DB_TYPE]+[DB_CONNECTOR]://[USERNAME]:[PASSWORD]@[HOST]:[PORT]/[DB_NAME]
 
 To create the initial database, just import the db object from an interactive Python shell and run the SQLAlchemy.create_all() method to create the tables and database:
-
-
+## 建立 Model (database structure)
+```python
+class User(db.Model): # 繼承db.Model
+    id = db.Column("id", db.Integer, primary_key=True)
+    username = db.Column("username", db.String(80), unique=True, nullable=False)
+    email = db.Column("email", db.String(120), unique=True, nullable=False)
+```
 
 
 from yourapplication import User
@@ -121,19 +127,27 @@ Product 和 AddToCar 這兩個部分，他們的關係為一對多 (表示為一
 再來 AddToCar (一對多的多) 的部分需要設定 db.ForeignKey() 來告訴 SQLAlchemy 當兩張表連結時要以什麼為外接的 key。
 
 ```python
- class User(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        name = db.Column(db.String(80))
-        email = db.Column(db.String(120), unique=True)
-        posts = db.relationship('Post', backref='user')
-
-
-    class Post(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        content = db.Column(db.Text)
-        user_id = db.Column(db.Integer, db.ForeignKey('user.id')
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=True, nullable = False)
+    email = db.Column(db.String(120), unique=True, nullable = False)
+    posts = db.relationship('Post', backref='user')
         
-        
+    def __repr__(self):
+        return f"User('{self.id}', '{self.username}', '{self.email}')"
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100, nullable = False))
+    content = db.Column(db.Text, nullable = False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    
+     def __repr__(self):
+        return f"User('{self.title}', '{self.user_id}')"
+  
+  
+
+```        
 # 一. 前言
 ## 1. 什麼是 SQLAlchemy ？
 - A library that facilitates the communication between Python programs and databases.
@@ -303,3 +317,15 @@ class Users(db.Model):
         self.email = email
 ```
 ![image](https://user-images.githubusercontent.com/90739897/159874353-ba72a413-d1b1-4929-b47c-b4a0b209aeb1.png)
+### cmd 操作db
+```
+進入project folder
+python
+# 創建 db
+from app.py import db
+db.create_all
+# 創建 table
+from app.py import User, Post
+user_1 = User(username = 'Tony', email = '123@demo.com')
+user_2 = User(username = 'James', email = '456@demo.com')
+```
