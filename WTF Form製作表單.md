@@ -67,23 +67,23 @@ class MyForm(FlaskForm): # 取名MyForm，繼承FlaskForm類別。
     submit = SubmitField("確認")
 ```
 ![formexp](https://user-images.githubusercontent.com/90739897/160233142-71d4ff4f-ca6a-4ab1-9edc-3713eb2aa83b.png)
-## 設定 secret key
+## 4. 設定 secret key
 補充 為甚麼要設?
 ```python
 app.config['SECRET_KEY']='mykey'
 ```
 
-## 創建 MyForm 實例
+## 5. 創建 MyForm 實例
 補充 為甚麼在很多地方都會看到要創建實例?
 - 才能使用class內的東西(變數, function, 等等)
 ```python
 form = MyForm()
 ```
-## 將 form 傳入 html
+## 6. 將 form 傳入 html
 ```python
 return render_template("login.html", form = form)
 ```
-## 1. 範例一 單純顯示form在網頁上(簡易版)
+# 範例一 單純顯示form在網頁上(簡易版)
 ```python
 # app.py
 from flask import Flask, render_template
