@@ -44,6 +44,7 @@ class User(db.Model): # 繼承db.Model
     username = db.Column("username", db.String(80), unique=True, nullable=False)
     email = db.Column("email", db.String(120), unique=True, nullable=False)
     # how object is printed when we print it out
+    # query 時顯示的結果
     def __repr__(self):
         return f"User('{self.id}', '{self.username}', '{self.email}')"
 ```
