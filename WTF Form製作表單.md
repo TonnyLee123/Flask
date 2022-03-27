@@ -1,9 +1,9 @@
 先前使用 request.form 獲得使用者在表單上輸入的資料。
 補充 flash
-# [WTForms](https://wtforms.readthedocs.io/en/2.3.x/)
+# 一. [WTForms](https://wtforms.readthedocs.io/en/2.3.x/)
 - Python的library
 - 提供**表單呈現**及**驗證**等功能。
-## 核心概念
+## 1. 概念
 Forms 是 Fields的集合，可以選擇透過字典（dictionary）或屬性（attribute）的方式來接觸它們。
 每個Fields都代表某一種資料類型，且Fields欄位限制使用者僅能夠輸入符合該資料類型的數據。
 舉例 IntegerField 與 StringField 代表的是兩種不一樣的資料型態
@@ -23,46 +23,39 @@ Select fields with static choice values:
 - TextAreaField
 - ![img](https://i.stack.imgur.com/JJ5Kw.png)
 - SubmitField
-## 安裝
+## 2. 安裝
 ```python
 pip install WTForms
 ```
 
-# Flask-WTF
-- Python的函式庫
+# 二. [Flask-WTF](https://flask-wtf.readthedocs.io/en/1.0.x/)
 - 將 Flask 應用程式與 WTForms 整合。
 - Flask-WTF這個套件包括檔案上傳、CSRF以及reCAPTCHA驗證等，解決了WTForms無法上傳檔案的問題。
 
-## 安裝
+## 1. 安裝
 ```python
 pip install Flask-WTF
 ```
-# 新增一個form.py
-- 裡面包含各種class(form)
-- 
+
 # 建立表單
 建一個類別, 其繼承的是FlaskForm，而前面的wtforms繼承的是Form。
 建立了RegForm的類別，透過這個類別來讓使用者登入。
 
-# WTF Form 實作
-## 匯入套件
+# 三. WTF Form 實作
+## 1. 新增 form.py
+- 裡面包含各種class(form)
+## 2. 匯入套件
 ```python
 from flask import Flask, render_template, session, redirect, url_for
 
 # 本次學習的套件
 from flask_wtf import FlaskForm 
-
 from wtforms import (StringField, BooleanField, RadioField, SelectField, TextField, TextAreaField, SubmitField)                     
 from wtforms.validators import DataRequired
 ```
 
-
-```python
-app = Flask(__name__)
-app.config['SECRET_KEY']='mykey' # 加上SECRET KEY的設定
-```
-## 設定FormField
-透過Class 定義 Form, 每個 Field 的種類, 限制等等。
+## 3. 設定FormField
+**透過 Class 定義 Form, 定義每個 Field 的種類, 限制等等。**
 - validators attribute
     - DataRequired: 此欄位為必填欄位，在確認時會檢查使用者是否確實輸入這個欄位。
 ```python
