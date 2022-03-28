@@ -160,22 +160,6 @@ class Post(db.Model):
 
 ```        
 
-
-## 3. 為什麼使用 Flask-SQLAlchemy ？
-- 可支援市面上常用的資料庫, 如: sqlite、Mysql、PostgreSQL、MSSql、Oracle。
-- 可以使用原生 SQL下指令，也同時支援 ORM 框架來操作資料庫，可以隨時切換很方便。
-- 
-## 補充 Object Relational Mapper
-
-
-# 二. 操作 Flask-SQLAlchemy 
-## 1. 安裝
-```
-pip install flask-sqlalchemy
-```
-## 2. 進行資料庫連線
-
-###  sqlite 連線
 ```python
 # app.py
 from flask import Flask
