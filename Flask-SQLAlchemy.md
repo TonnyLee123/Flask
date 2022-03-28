@@ -18,7 +18,6 @@
 - 因此可以直接用 Python 對資料庫進行操作，不需要再去寫複雜的SQL語法處理資料的選取。
 - 補圖片
 
-
 # 二. 操作 Flask-SQLAlchemy 
 ## 1. 安裝 Flask-SQLAlchemy 
 ```
