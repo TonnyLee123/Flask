@@ -101,13 +101,13 @@ User.query.first()
 ```
 ### 3. Filter result
 ```
-User.query.filter_by(username = 'Tony').all()
+User.query.filter_by(username = 'Tony')
 ```
+
 user = User.query.filter_by(username = 'Tony').first()
 user
 user.id
 user.name
-
 
 ### 4. Get id為1的資料
 ```
