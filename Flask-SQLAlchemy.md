@@ -20,28 +20,27 @@
 
 
 # 二. 操作 Flask-SQLAlchemy 
-## 1. 安裝Flask-SQLAlchemy 
+## 1. 安裝 Flask-SQLAlchemy 
 ```
 pip install flask-sqlalchemy
 ```
-## 2. 進行資料庫連線
-
-###  sqlite 連線
+##  2. 引入 SQLAlchemy
 ```python
 # app.py
 from flask_sqlalchemy import SQLAlchemy
 ```
-
-## config[...]：設定資料庫連線
+## 3. config[...]：設定資料庫連線
+設定 SQLite 檔案路徑。
 ```python
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///users.sqlite3' # 設定SQLite資料庫檔案路徑。
+app.config['SQLALCHEMY_DATABASE_URI']='sqlite:////tmp/test.db' 
 # app.config['SQLALCHEMY_DATABASE_URI'] = [DB_TYPE]+[DB_CONNECTOR]://[USERNAME]:[PASSWORD]@[HOST]:[PORT]/[DB_NAME]
-db = SQLAlchemy(app) # 建立SQLAlchemy物件。物件建立後，提供一個名為Model的類別。
 ```
-  
-## 創建 models.py 
-- 負責存放各種 model
-## 建立 Model (database structure)
+## 4. 建立 SQLAlchemy物件
+物件建立後，提供一個名為Model的類別。
+```
+db = SQLAlchemy(app)
+```
+## 5. 建立 Model (database structure)
 ```python
 class User(db.Model): # 繼承db.Model
     id = db.Column("id", db.Integer, primary_key=True)
@@ -54,33 +53,81 @@ class User(db.Model): # 繼承db.Model
     def __repr__(self):
         return f"User('{self.id}', '{self.username}', '{self.email}')"
 ```
-## 建立資料到 table
-```python
-user_1 = User(username = 'Tony', email = '123@demo.com')
-user_2 = User(username = 'James', email = '456@demo.com')
+# 三. 在 cmd 操作 db
+## A. 存入資料
+### 1. 開啟cmd, 並進入 project_folder
+### 2. python
+### 3. 引入db
+```
+from app.py import db
+```
+### 4. 引入 table模型
+```
+from app.py import User
+```
+### 5. 創建初始化的db
+```
+db.create_all()
+```
+### 5. 創建資料(row)
 id 是 primary key，自動產出，不必給值。
 ```
+user_1 = User(username = 'Tony', email = '123@demo.com')
+user_2 = User(username = 'James', email = '456@demo.com')
+```
+### 6. 加入資料到 table
+```
+db.session.add(user_1)
+db.session.add(user_2)
+```
+### 7. 提交資料
+```
+db.session.commit()
+```
 
-## Accessing data in DB
-### 1. Get all user
-```python
+## B. Accessing data 
+
+### 1. Get all user in user_table
+Return list
+```
 User.query.all()
 ```
 ### 2. Get first user
-```python
-# list中的第一個
+list中的第一個
+```
 User.query.first()
 ```
 ### 3. Filter result
-```python
+```
 User.query.filter_by(username = 'Tony').all()
 ```
+user = User.query.filter_by(username = 'Tony').first()
+user
+user.id
+user.name
 
-### 4. Get id為1的user 
-```python
+
+### 4. Get id為1的資料
+```
 User.query.get(1)
 ```
+post_1 = Post(title = "Blog 1", content = "First Post", user_id = user.id)
+post_2 = Post(title = "Blog 2", content = "Second Post", user_id = user.id)
+db.session.add(post_1)
+db.session.add(post_2)
+db.session.commit()
 
+user.posts
+for p in user.posts:
+print(post.title)
+---
+post = Post.query.first()
+post
+post.author
+
+---
+db.drop_all() 刪除db內所有資料
+```
 
 # ORM 一對多關聯
 ### 定義一對多模型
