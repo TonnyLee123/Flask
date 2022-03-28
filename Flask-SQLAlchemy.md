@@ -1,21 +1,19 @@
 
 # 一. 前言
 ## 1. 什麼是 SQLAlchemy ？
-- A library that facilitates the communication between Python programs and databases.
-- An ORM tool
-    -  Translate Python classes to tables on relational databases. 
-    -  Automatically converts function calls to SQL statements.
+- A library that facilitates(促進) the communication between Python programs and databases.
+- An ORM
 ## 2. 什麼是 Flask-SQLAlchemy ？
-- Flask 本身不支援直接對資料庫操作，而 Flask-SQLAlchemy 是 Flask 的 extension，
-- 簡化 Flask 開發人員操作資料庫而出現的套件，它適度的包裝了SQLAlchemy。
-
+- Flask 本身不支援直接對資料庫操作
+- Flask 的 extension
 ## 3. 為什麼使用 Flask-SQLAlchemy ？
-- 可支援市面上常用的資料庫, 如: sqlite、Mysql、PostgreSQL、MSSql、Oracle。
-- 可以使用原生 SQL下指令，也同時支援 ORM 框架來操作資料庫，可以隨時切換很方便。
+- 可支援常用的資料庫, 如: sqlite、Mysql、PostgreSQL、MSSql、Oracle 等等。
+
 ## ORM (Object Relational Mapper)
 - 在 Database 和 Application 之間做 mapping
 - 自動將 Python 代碼轉換成對應的SQL語法，再來進行對資料庫的操作
-- 因此可以直接用 Python 對資料庫進行操作，不需要再去寫複雜的SQL語法處理資料的選取。
+- 用 Python 對資料庫進行操作，不需要再去寫複雜的SQL語法處理資料的選取。
+- Translate Python classes to tables on relational databases. 
 - 補圖片
 
 # 二. 操作 Flask-SQLAlchemy 
