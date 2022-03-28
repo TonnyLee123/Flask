@@ -55,6 +55,7 @@ class User(db.Model): # 繼承db.Model
 ```
 # 三. 在 cmd 操作 db
 ## A. 存入資料
+注意: 4, 5 順序調換會不能執行 為甚麼???
 ### 1. 開啟cmd, 並進入 project_folder
 ### 2. python
 ### 3. 引入db
@@ -62,13 +63,13 @@ class User(db.Model): # 繼承db.Model
 ```
 from app import db
 ```
-### 4. 引入 table模型
-```
-from app import User
-```
-### 5. 創建初始化的db
+### 4. 創建初始化的db
 ```
 db.create_all()
+```
+### 5. 引入 table模型
+```
+from app import User
 ```
 ### 5. 創建資料(row)
 id 是 primary key，自動產出，不必給值。
@@ -221,15 +222,6 @@ db.session.add(user_1)
 db.session.add(user_2)
 ```
 
-
-# ORM 一對多關聯
-### 定義一對多模型
-Step1. 設定 db.relationship(…) 關係  
-Step2. 設定 db.ForeignKey(…) 關係
-Product 和 AddToCar 這兩個部分，他們的關係為一對多 (表示為一個 Product 可以被多個 AddToCar 包含)  
-首先 Product (一對多的一) 的部分需要設定 db.relationship() 來讓 SQLAlchemy 知道 Product 和 AddToCar 是有關聯的，而 backref=”product” 中的 product 則像是暗號，未來在讀取 AddToCar 表格時，後面只需像這樣加上 AddToCar.product，就可以輕鬆讀取到 Product 表格內的資料囉！
-再來 AddToCar (一對多的多) 的部分需要設定 db.ForeignKey() 來告訴 SQLAlchemy 當兩張表連結時要以什麼為外接的 key。
-
 ```python
  class User(db.Model):
         id = db.Column(db.Integer, primary_key=True)
@@ -245,61 +237,4 @@ Product 和 AddToCar 這兩個部分，他們的關係為一對多 (表示為一
         
 query = Post.query.first()
 print(query.user.name)  
-```
-## 在 cmd 操作 db
-### 創建db，並填入資料
-```
-1. 進入 project_folder
-2. python
-3. 引入db
-from app.py import db
-3. 創建初始化的db
-db.create_all
-4. 創建 table
-from app.py import User, Post
-user_1 = User(username = 'Tony', email = '123@demo.com')
-user_2 = User(username = 'James', email = '456@demo.com')
-5. 加入資料到table
-db.session.add(user_1)
-db.session.add(user_2)
-6. 提交資料
-db.session.commit()
-
-```
-### 2. Accessing data in DB
-```
-1. Get all user in user_table (return list)
-User.query.all
-2. Get first user  (list中的第一個)
-User.query.first()
-3. Filter result
-User.query.filter_by(username = 'Tony').all()
-
-user = User.query.filter_by(username = 'Tony').first()
-user
-user.id
-user.name
-
-
-### 4. Get id為1的user 
-User.query.get(1)
-
-post_1 = Post(title = "Blog 1", content = "First Post", user_id = user.id)
-post_2 = Post(title = "Blog 2", content = "Second Post", user_id = user.id)
-db.session.add(post_1)
-db.session.add(post_2)
-db.session.commit()
-
-user.posts
-for p in user.posts:
-print(post.title)
-
-
----
-post = Post.query.first()
-post
-post.author
-
----
-db.drop_all() 刪除db內所有資料
 ```
