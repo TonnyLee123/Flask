@@ -58,12 +58,13 @@ class User(db.Model): # 繼承db.Model
 ### 1. 開啟cmd, 並進入 project_folder
 ### 2. python
 ### 3. 引入db
+
 ```
-from app.py import db
+from app import db
 ```
 ### 4. 引入 table模型
 ```
-from app.py import User
+from app import User
 ```
 ### 5. 創建初始化的db
 ```
