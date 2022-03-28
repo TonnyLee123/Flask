@@ -11,9 +11,8 @@
 
 ## ORM (Object Relational Mapper)
 - 在 Database 和 Application 之間做 mapping
-- 自動將 Python 代碼轉換成對應的SQL語法，再來進行對資料庫的操作
-- 用 Python 對資料庫進行操作，不需要再去寫複雜的SQL語法處理資料的選取。
-- Translate Python classes to tables on relational databases. 
+- 將 **Python代碼**轉成對應的**SQL語法**，再來進行對資料庫的操作。
+- Translate Python **classes** to **tables** on relational databases. 
 - 補圖片
 
 # 二. 操作 Flask-SQLAlchemy 
@@ -28,13 +27,16 @@ from flask_sqlalchemy import SQLAlchemy
 ```
 ## 3. config[...]：設定資料庫連線
 設定 SQLite 檔案路徑。
+- C:\Users\a1003\Desktop\flask_project_test\flask_test\site.db
+- sqlite: 使用的db種類
+- \/// 表示相對目前folder的路徑
 ```python
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:////tmp/test.db' 
+app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///site.db' 
 # app.config['SQLALCHEMY_DATABASE_URI'] = [DB_TYPE]+[DB_CONNECTOR]://[USERNAME]:[PASSWORD]@[HOST]:[PORT]/[DB_NAME]
 ```
 ## 4. 建立 SQLAlchemy物件
-物件建立後，提供一個名為Model的類別。
-```
+物件建立後，提供一個名為**Model**的類別(建立model時，供繼承)
+```python
 db = SQLAlchemy(app)
 ```
 ## 5. 建立 Model (database structure)
@@ -56,7 +58,6 @@ class User(db.Model): # 繼承db.Model
 ### 1. 開啟cmd, 並進入 project_folder
 ### 2. python
 ### 3. 引入db
-
 ```
 from app import db
 ```
@@ -85,7 +86,6 @@ db.session.commit()
 ```
 
 ## B. Accessing data 
-
 ### 1. Get all user in user_table
 Return list
 ```
@@ -126,10 +126,10 @@ post.author
 
 ---
 db.drop_all() 刪除db內所有資料
-```
 
-# ORM 一對多關聯
-### 定義一對多模型
+
+# One-to-many Relationship
+## 1. 定義models
 Step1. 設定 db.relationship(…) 關係  
 Step2. 設定 db.ForeignKey(…) 關係
 Product 和 AddToCar 這兩個部分，他們的關係為一對多 (表示為一個 Product 可以被多個 AddToCar 包含)  
@@ -154,70 +154,9 @@ class Post(db.Model):
     
      def __repr__(self):
         return f"User('{self.title}', '{self.user_id}')"
-  
-  
-
 ```        
 
-```python
-# app.py
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
-
-# 設定資料庫連線
-# 設定SQLite資料庫檔案路徑
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-# 物件建立後，會提供一個名為Model的class。
-db = SQLAlchemy(app)
-
-# 建立 Model
-class User(db.Model): # 繼承db.Model
-    id = db.Column("id", db.Integer, primary_key=True)
-    username = db.Column("username", db.String(80), unique=True, nullable=False)
-    email = db.Column("email", db.String(120), unique=True, nullable=False)
-
-    def __repr__(self):
-        return f"User('{self.id}', '{self.username}', '{self.email}')"
-```
-app.config['SQLALCHEMY_DATABASE_URI'] = [DB_TYPE]+[DB_CONNECTOR]://[USERNAME]:[PASSWORD]@[HOST]:[PORT]/[DB_NAME]
-
-To create the initial database, just import the db object from an interactive Python shell and run the SQLAlchemy.create_all() method to create the tables and database:
-
-
-
-
-from yourapplication import User
-admin = User(username='admin', email='admin@example.com')
-guest = User(username='guest', email='guest@example.com')
-# But they are not yet in the database, so let’s make sure they are:
-
-db.session.add(id)
-db.session.add(username)
-db.session.commit()
-
-Accessing the data in database
-User.query.all()
-[<User u'admin'>, <User u'guest'>]
->>> User.query.filter_by(username='admin').first()
-<User u'admin'>
-Note how we never defined a __init__ method on the User class? That’s because SQLAlchemy adds an implicit constructor to all model classes which accepts keyword arguments for all its columns and relationships. If you decide to override the constructor for any reason, make sure to keep accepting **kwargs and call the super constructor with those **kwargs to preserve this behavior:
-
-class Foo(db.Model):
-    # ...
-    def __init__(self, **kwargs):
-        super(Foo, self).__init__(**kwargs)
-        # do custom stuff
-```
-user_1 = User(username = 'Tony', email = '123@demo.com')
-user_2 = User(username = 'James', email = '456@demo.com')
-# id 是primary key，會自動產出id，不必給值。
-# 加入db
-```python
-db.session.add(user_1)
-db.session.add(user_2)
-```
 
 ```python
  class User(db.Model):
@@ -235,3 +174,6 @@ db.session.add(user_2)
 query = Post.query.first()
 print(query.user.name)  
 ```
+# 補充
+## 1. URI, URL. URN
+![image](https://user-images.githubusercontent.com/90739897/160451676-d3ae037c-6aee-4ab3-a99c-9c91d084e255.png)
