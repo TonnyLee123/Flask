@@ -1,11 +1,6 @@
 # Flask-Login
-- 實現網站登入與登出的功能
-
-
-Flask-Login provides user session management for Flask. It handles the common tasks of logging in, logging out, and remembering your users’ sessions over extended periods of time.
-所謂flask-login藉由 user session來提供使用者登入的任務，諸如使用者的登入、登出以及在一定的期間內記住目前的使用者，因此，flask-login可以將使用者的 ID儲存在session中，讓使用者可以方便的登入、登出網站應用服務。
-
-
+**藉由 session 來提供使用者實現網站登入與登出的功能**
+# Flask-Login 大致操作
 ## 1. 安裝 flask-login
 ```
 pip install flask-login
@@ -20,12 +15,15 @@ from flask_login import LoginManager # class
 login_manager = LoginManager()
 ```
 ## 4. 初始化，並且提供一個登入的view
+初始化
+- 使app有login_manager的功能
 ```python
 login_manager.init_app(app)
 login_manager.login_view = 'login' # 將view指向login頁面。
 ```
 
-# __init__.py
+# 實作
+# \_\_init_\_\.py
 用來初始化Python的「myproject」 packages
 ## 1. 匯入Flask套件，以及其他本應用程式所需要的套件
 ```python
@@ -33,6 +31,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+
 # flask_login
 from flask_login import LoginManager
 ```
@@ -40,7 +39,9 @@ from flask_login import LoginManager
 設定專案路徑
 ```python
 basedir = os.path.abspath(os.path.dirname(__file__))
+# os.path.abspath()取得絕對的路徑位置。__file__ 為目前的檔案。os.path.dirname(__file__) 是指目前檔案所在的資料夾名稱。
 ```
+
 ## 3. 建立app實體
 ```python
 app = Flask(__name__)
@@ -52,24 +53,22 @@ app.config['SECRET_KEY']= 'acretkeyinthisproject'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir,'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 ```
-## 5.資料庫db
-設定資料庫db與Migrate
+## 5.建立資料庫實體與設定Migrate
 ```python
 db = SQLAlchemy(app)
 Migrate(app,db)
 ```
 ## 建立LoginManager實體
-初始化
-- 使app有login_manager的功能
 ```python
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 ```
 # models.py
-處理與資料庫相關的問題
+處理與資料庫相關問題
 
 ## 1. 匯入套件
+匯入實體
 ```python
 from myproject import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -79,12 +78,11 @@ from flask_login import UserMixin
 ## 2. 建立 User Class
 ```python
 class User(db.Model, UserMixin):
-    id       = db.Column(db.Integer, primary_key = True)
-    email    = db.Column(db.String(64),unique=True, index=True)
+    id = db.Column(db.Integer, primary_key = True)
+    email = db.Column(db.String(64),unique=True, index=True)
     username = db.Column(db.String(64),unique=True, index=True)
     password_hash = db.Column(db.String(128))
     def __init__(self, email, username, password):
-        """初始化"""
         self.email = email
         self.username = username
         self.password_hash = generate_password_hash(password) # 儲存加密後的密碼
@@ -92,16 +90,14 @@ class User(db.Model, UserMixin):
     # 檢查登入時輸入的密碼與資料庫中存放的加密後password_hash是否一樣，如果相同，可以進入網站，反之則否。
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-```
-
-## 3. login_manager裝飾器
-```python
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
+        
+    # login_manager裝飾器，用來載入user
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(user_id)
 ```
 # forms.py
-處理資料輸入的相關問題
+處理表單及資料輸入相關問題
 ## 1. 匯入套件
 ```python
 from flask_wtf import FlaskForm
@@ -109,8 +105,7 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, email_validator
 from wtforms import ValidationError
 ```
-## 2. 表單製作
-需要兩個表單，Login表單及Registration表單
+## 2. 表單製作(Login及Registration表單)
 ## 2.1 登入表單
 ```
 class LoginForm(FlaskForm):
@@ -118,7 +113,7 @@ class LoginForm(FlaskForm):
     password = PasswordField('密碼',validators=[DataRequired()])
     submit = SubmitField('登入系統')
 ```
-## 2.2註冊表單
+## 2.2 註冊表單
 DataRequired("目標欄位")
 - 在這個欄位輸入的值需要與目標欄位一致
 ```
@@ -131,7 +126,7 @@ class RegistrationForm(FlaskForm):
      
     # 檢查輸入的email與username是否與資料庫中存在的紀錄重複。重複就產生錯誤。
     # 檢查email
-    def check_email(self, field):
+    def check_email(self, field): # field 用來接收 email
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('電子郵件已經被註冊過了')
     # 檢查username 
@@ -140,12 +135,14 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('使用者名稱已經存在')
 ```
 # app.py
-會建立這個網站需要的所有路由
+建立網站需要的所有路由
 
 ## 1. 匯入套件
 ```
 from flask import render_template, redirect, request, url_for, flash, abort
-from flask_login import login_user, logout_user, login_required
+
+from flask_login import login_user, logout_user, login_required # 
+
 from myproject import app, db
 from myproject.models import User
 from myproject.forms import LoginForm, RegistrationForm
@@ -158,12 +155,11 @@ def home():
     return render_template('home.html')
 ```
 ### 2.2 登入
-需要接收form表單的資料
 ```
 @app.route('/login',methods=['GET','POST'])
 def login():
     form = LoginForm()
-if form.validate_on_submit():
+    if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user.check_password(form.password.data) and user is not None:
             login_user(user)
@@ -175,7 +171,8 @@ if form.validate_on_submit():
     return render_template('login.html',form=form)
 ```
 ### 2.3 登出
-登出雖然沒有頁面，但是仍然需要路由/logout提供給登出使用。@login_required裝飾器用來確認使用者狀態必須是在登入狀態。此外，我們使用flash來呈現登出成功的訊息：
+登出雖然沒有頁面，但是仍然需要路由/logout提供給登出使用。
+@login_required用來確認使用者狀態必須是在登入狀態
 ```
 @app.route('/logout')
 @login_required
@@ -186,15 +183,15 @@ def logout():
 ```
 
 ### 2.4 註冊
-除了GET方法外，還需要POST方法來接收RegistrationForm表單的資料。此外，在這個階段，我們需要讓經過驗證的使用者註冊資料可以被存在資料庫中，我們需要對db.session進行寫入的步驟：
+讓經過驗證的使用者註冊資料可以被存在資料庫中，我們需要對db.session進行寫入的步驟：
 ```
 @app.route('/register',methods=['GET','POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
+        # 建立一個row 在user_table
         user = User(email=form.email.data,
-        username=form.username.data, password=form.password.data)
-        
+        username=form.username.data, password=form.password.data)       
         # add to db table
         db.session.add(user)
         db.session.commit()
