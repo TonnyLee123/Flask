@@ -23,6 +23,8 @@ login_manager.login_view = 'login' # 將view指向login頁面。
 ```
 
 # 實作
+![image](https://user-images.githubusercontent.com/90739897/160667341-28c79bec-c90e-48f9-bf29-102cf78b722e.png)
+
 # \_\_init_\_\.py
 用來初始化Python的「myproject」 packages
 ## 1. 匯入Flask套件，以及其他本應用程式所需要的套件
@@ -155,19 +157,22 @@ def home():
     return render_template('home.html')
 ```
 ### 2.2 登入
-```
+```python
 @app.route('/login',methods=['GET','POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
+        # 獲取使用者的資料以便之後使用
         user = User.query.filter_by(email=form.email.data).first()
+        # 如果輸入的密碼正確和使用者存在
         if user.check_password(form.password.data) and user is not None:
+            # 則登入user
             login_user(user)
             flash("您已經成功的登入系統")
             next = request.args.get('next')
             if next == None or not next[0]=='/':
                 next = url_for('welcome_user')
-            return redirect(next)
+            return redirect(next)  # 到 welcome_user 頁面
     return render_template('login.html',form=form)
 ```
 ### 2.3 登出
