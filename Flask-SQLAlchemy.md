@@ -130,18 +130,25 @@ db.drop_all() 刪除db內所有資料
 
 # One-to-many Relationship
 ## 1. 定義models
-Step1. 設定 db.relationship(…) 關係  
-Step2. 設定 db.ForeignKey(…) 關係
-Product 和 AddToCar 這兩個部分，他們的關係為一對多 (表示為一個 Product 可以被多個 AddToCar 包含)  
-首先 Product (一對多的一) 的部分需要設定 db.relationship() 來讓 SQLAlchemy 知道 Product 和 AddToCar 是有關聯的，而 backref=”product” 中的 product 則像是暗號，未來在讀取 AddToCar 表格時，後面只需像這樣加上 AddToCar.product，就可以輕鬆讀取到 Product 表格內的資料囉！
-再來 AddToCar (一對多的多) 的部分需要設定 db.ForeignKey() 來告訴 SQLAlchemy 當兩張表連結時要以什麼為外接的 key。
-
+## 1. 設定 db.relationship(…)
+一對多的**一** 設定 db.relationship() 讓 SQLAlchemy 知道 User 和 Post 是有關聯的
+- posts不是Column，所以不會顯示在表格上
+- backref = ”user” 中的 user 像是暗號，未來在讀取 Post 表格時，可透過 Post.user，讀取到 User 表格內的資料
+- lazy=True ???
+```python
+posts = db.relationship('Post', backref='user', lazy=True)
+```
+# 2. 設定 db.ForeignKey(…)
+一對多的**多**設定 db.ForeignKey() 來告訴 SQLAlchemy 要以什麼為 ForeignKey 來連接兩個表格。
+```python
+ user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+```
 ```python
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable = False)
     email = db.Column(db.String(120), unique=True, nullable = False)
-    posts = db.relationship('Post', backref='user')
+    posts = db.relationship('Post', backref='user', lazy=True) # 1
         
     def __repr__(self):
         return f"User('{self.id}', '{self.username}', '{self.email}')"
@@ -150,30 +157,11 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100, nullable = False))
     content = db.Column(db.Text, nullable = False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False) # 2
     
-     def __repr__(self):
-        return f"User('{self.title}', '{self.user_id}')"
+    def __repr__(self):
+       return f"User('{self.title}', '{self.user_id}')"
 ```        
-
-
-
-```python
- class User(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        name = db.Column(db.String(80))
-        email = db.Column(db.String(120), unique=True)
-        posts = db.relationship('Post', backref='user')
-
-
-    class Post(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        content = db.Column(db.Text)
-        user_id = db.Column(db.Integer, db.ForeignKey('user.id')
-        
-query = Post.query.first()
-print(query.user.name)  
-```
 # 補充
 ## 1. URI, URL. URN
 ![image](https://user-images.githubusercontent.com/90739897/160451676-d3ae037c-6aee-4ab3-a99c-9c91d084e255.png)
