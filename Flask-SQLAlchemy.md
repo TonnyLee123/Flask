@@ -100,50 +100,32 @@ User.query.first()
 ```
 User.query.filter_by(username = 'Tony')
 ```
-
-user = User.query.filter_by(username = 'Tony').first()
-user
-user.id
-user.name
-
 ### 4. Get id為1的資料
 ```
 User.query.get(1)
 ```
-post_1 = Post(title = "Blog 1", content = "First Post", user_id = user.id)
-post_2 = Post(title = "Blog 2", content = "Second Post", user_id = user.id)
-db.session.add(post_1)
-db.session.add(post_2)
-db.session.commit()
-
-user.posts
-for p in user.posts:
-print(post.title)
----
-post = Post.query.first()
-post
-post.author
-
----
-db.drop_all() 刪除db內所有資料
-
+### 5. 刪除db內所有資料
+```
+db.drop_all()
+```
 
 # One-to-many Relationship
 ## 1. 定義models
-## 1. 設定 db.relationship(…)
+### 1. 設定 db.relationship(…)
 一對多的**一** 設定 db.relationship() 讓 SQLAlchemy 知道 User 和 Post 是有關聯的
-- posts不是Column，所以不會顯示在表格上
-- backref = ”user” 中的 user 像是暗號，未來在讀取 Post 表格時，可透過 Post.user，讀取到 User 表格內的資料
+- posts不是Column，所以不會顯示在表格上 
+- backref = ”user” 中的 user 像是暗號，未來在讀取 Post 表格時，可透過 Post.user，讀取到 User 表格內的資料 (user.post)
 - lazy=True ???
 ```python
 posts = db.relationship('Post', backref='user', lazy=True)
 ```
-# 2. 設定 db.ForeignKey(…)
-一對多的**多**設定 db.ForeignKey() 來告訴 SQLAlchemy 要以什麼為 ForeignKey 來連接兩個表格。
-透過 ForeignKey 來連接兩個表格。
+### 2. 設定 db.ForeignKey(…)
+一對多的**多**設定 db.ForeignKey()
+- 透過 ForeignKey 來連接兩個表格
 ```python
- user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+ user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False) # 透過user_table中(因此user小寫)的id(pk)為fk
 ```
+
 ```python
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -162,7 +144,29 @@ class Post(db.Model):
     
     def __repr__(self):
        return f"User('{self.title}', '{self.user_id}')"
-```        
+```
+## 2. cmd 操作
+```
+user_1 = User(username = 'Tony', email = '123@demo.com)
+db.session.add(user_1)
+db.session.commit()
+user = User.query.filter_by(username = 'Tony')
+user.id
+
+post_1 = Post(title = "Blog 1", content = "First Post", user_id = user.id)
+post_2 = Post(title = "Blog 2", content = "Second Post", user_id = user.id)
+db.session.add(post_1)
+db.session.add(post_2)
+db.session.commit()
+
+user.posts
+for p in user.posts:
+print(post.title)
+
+post = Post.query.first()
+post
+post.user
+```
 # 補充
 ## 1. URI, URL. URN
 ![image](https://user-images.githubusercontent.com/90739897/160451676-d3ae037c-6aee-4ab3-a99c-9c91d084e255.png)
