@@ -140,6 +140,7 @@ posts = db.relationship('Post', backref='user', lazy=True)
 ```
 # 2. 設定 db.ForeignKey(…)
 一對多的**多**設定 db.ForeignKey() 來告訴 SQLAlchemy 要以什麼為 ForeignKey 來連接兩個表格。
+透過 ForeignKey 來連接兩個表格。
 ```python
  user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
 ```
