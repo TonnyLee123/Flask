@@ -4,13 +4,9 @@
 - Python的library
 - 提供**表單呈現**及**驗證**等功能。
 ## 1. 概念
-Forms 是 Fields的集合，可以選擇透過字典（dictionary）或屬性（attribute）的方式來接觸它們。
-每個Fields都代表某一種資料類型，且Fields欄位限制使用者僅能夠輸入符合該資料類型的數據。
-舉例 IntegerField 與 StringField 代表的是兩種不一樣的資料型態
-此外，FieldS 其他屬性，例如label（標籤），description（描述）和錯誤驗證等。
-每個Fields欄位都有一個widget實例。widget的工作是呈現該Fields欄位對應的HTML標籤。你可以指定Widget實例給每個特定的Fields欄位，不過在預設的情況下每個Fields欄位都有一個widget實例。
-有一些Fields欄位設置的目的只是為了工程師使用上方便，舉例來說TextAreaField只是一個字串欄位（StringField），而預設的widget是TextArea。
-為了提供各種驗證規則，Fields欄位包含了一系列的驗證方式。
+Forms 是 Fields的集合
+
+每個Fields欄位都有一個widget實例。widget的工作是呈現該Fields欄位對應的HTML標籤。預設下每個Fields欄位都有一個widget實例。
 - StringField
 - BooleanField (可複選吧?)
 - <img src = 'https://i.stack.imgur.com/YGNnE.png' width = 200>
