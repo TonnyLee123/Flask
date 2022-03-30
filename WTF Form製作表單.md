@@ -64,14 +64,10 @@ class MyForm(FlaskForm): # 取名MyForm，繼承FlaskForm類別。
 ```
 ![formexp](https://user-images.githubusercontent.com/90739897/160233142-71d4ff4f-ca6a-4ab1-9edc-3713eb2aa83b.png)
 ## 4. 設定 secret key
-補充 為甚麼要設?
 ```python
 app.config['SECRET_KEY']='mykey'
 ```
-
 ## 5. 創建 MyForm 實例
-補充 為甚麼在很多地方都會看到要創建實例?
-- 才能使用class內的東西(變數, function, 等等)
 ```python
 form = MyForm()
 ```
