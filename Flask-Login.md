@@ -26,6 +26,7 @@ login_manager.login_view = 'login' # 將view指向login頁面。
 ![image](https://user-images.githubusercontent.com/90739897/160667341-28c79bec-c90e-48f9-bf29-102cf78b722e.png)
 
 # \_\_init_\_\.py
+When a regular package is imported, this __init__.py file is implicitly executed.
 用來初始化Python的「myproject」 packages
 ## 1. 匯入Flask套件，以及其他本應用程式所需要的套件
 ```python
