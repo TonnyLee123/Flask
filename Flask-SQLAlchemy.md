@@ -26,7 +26,6 @@ from flask_sqlalchemy import SQLAlchemy
 ```
 ## 3. config[...]：設定資料庫連線
 設定 SQLite 檔案路徑。
-- C:\Users\a1003\Desktop\flask_project_test\flask_test\site.db
 - \/// 表示相對目前folder的路徑
 ```python
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///site.db' 
@@ -113,7 +112,6 @@ db.drop_all()
 一對多的**一** 設定 db.relationship() 讓 SQLAlchemy 知道 User 和 Post 是有關聯的
 - posts不是Column，所以不會顯示在表格上 
 - backref = ”user” 中的 user 像是暗號，未來在讀取 Post 表格時，可透過 Post.user，讀取到 User 表格內的資料 (user.post)
-- lazy=True ???
 ```python
 posts = db.relationship('Post', backref='user', lazy=True)
 ```
@@ -229,7 +227,6 @@ URL和URN都是一種URI。
 - path
     - 必須以 / 開頭
 ## lazy(懶載入)
-- 延遲載
 ```
 舉例
 school和student,1對多
