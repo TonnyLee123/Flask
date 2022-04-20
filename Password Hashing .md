@@ -22,11 +22,21 @@ pd = 'thispassword'
 ```
 ### 4. generate_password_hash(password)
 - 加密密碼
-- 每次都產生新的
+- 每次都產生新的加密後的密碼
+- 結果的資料型態是bytes (b'')
+- 「b」表示「bytes」，表示內容是bytes，而非字串（str）
 ```python
 hashed_password = bcrypt.generate_password_hash(password=pd)
 print(hashed_password)
 ```
+![image](https://user-images.githubusercontent.com/90739897/164190861-782aac06-8fbc-468d-b157-9981b946ce48.png)
+```python
+# 把b去掉
+# decode('utf-8')
+hashed_password = bcrypt.generate_password_hash(password=pd).decode('utf-8')
+```
+![image](https://user-images.githubusercontent.com/90739897/164191020-fe87cefe-5ab0-4b88-a7d3-73afbd43fe04.png)
+
 ### 5. check_password_hash(雜湊後的pd, 目前輸入的pd )
 檢查所輸入的密碼是否與db中的密碼相同
 ```python
