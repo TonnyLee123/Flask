@@ -21,7 +21,8 @@ bcrypt = Bcrypt()
 pd = 'thispassword'
 ```
 ### 4. generate_password_hash(password)
-加密密碼
+- 加密密碼
+- 每次都產生新的
 ```python
 hashed_password = bcrypt.generate_password_hash(password=pd)
 print(hashed_password)
